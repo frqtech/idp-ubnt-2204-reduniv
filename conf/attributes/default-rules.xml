@@ -16,7 +16,6 @@
     <import resource="eduPerson.xml" />
     <import resource="eduCourse.xml" />
     <import resource="samlSubject.xml" />
-    <import resource="brEduPerson.xml" />
     <import resource="schac.xml" />
 
 </beans>

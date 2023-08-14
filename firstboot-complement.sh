@@ -185,38 +185,6 @@
             fi
             
             UFUPPER=`echo ${UF} | sed 'y/áÁàÀãÃâÂéÉêÊíÍóÓõÕôÔúÚçÇ/aAaAaAaAeEeEiIoOoOoOuUcC/' | sed 's/[^a-zA-Z]//g' | tr [a-z] [A-Z]`
-            POLLER=""
-
-            case $UFUPPER in
-                "AC") STATE="ACRE" ; POLLER="200.139.7.155" ;;
-                "AL") STATE="ALAGOAS" ; POLLER="200.17.116.88" ;;
-                "AP") STATE="AMAPA" ; POLLER="200.129.167.57" ;;
-                "AM") STATE="AMAZONAS" ; POLLER="200.129.156.99" ;;
-                "BA") STATE="BAHIA" ; POLLER="200.128.2.8" ;;
-                "CE") STATE="CEARA" ; POLLER="200.129.0.78" ;;
-                "DF") STATE="DISTRITO FEDERAL" ; POLLER="200.130.35.155" ;;
-                "ES") STATE="ESPIRITO SANTO" ; POLLER="200.137.76.148" ;;
-                "GO") STATE="GOIAS" ; POLLER="200.18.160.2" ;;
-                "MA") STATE="MARANHAO" ; POLLER="200.137.129.30" ;;
-                "MG") STATE="MATO GROSSO" ; POLLER="200.129.240.123" ;;
-                "MS") STATE="MATO GROSSO DO SUL" ; POLLER="200.129.207.181" ;;
-                "MG") STATE="MINAS GERAIS" ; POLLER="200.131.2.173" ;;
-                "PA") STATE="PARA" ; POLLER="200.129.149.55" ;;
-                "PB") STATE="PARAIBA" ; POLLER="200.129.64.151" ;;
-                "PR") STATE="PARANA" ; POLLER="200.134.255.33" ;;
-                "PE") STATE="PERNANBUCO" ; POLLER="200.133.0.40" ;;
-                "PI") STATE="PIAUI" ; POLLER="200.137.160.141" ;;
-                "RR") STATE="RORAIMA" ; POLLER="200.129.139.172" ;;
-                "RO") STATE="RONDONIA" ; POLLER="200.129.143.210" ;;
-                "RJ") STATE="RIO DE JANEIRO" ; POLLER="200.159.254.108" ;;
-                "RN") STATE="RIO GRANDE DO NORTE" ; POLLER="200.137.0.199" ;;
-                "RS") STATE="RIO GRANDE DO SUL" ; POLLER="200.132.1.92" ;;
-                "SC") STATE="SANTA CATARINA" ; POLLER="200.237.193.28" ;;
-                "SP") STATE="SAO PAULO" ; POLLER="200.133.192.42" ;;
-                "SE") STATE="SERGIPE" ; POLLER="200.17.118.192" ;;
-                "TO") STATE="TOCANTINS" ; POLLER="200.139.26.32" ;;
-                *) STATE="NULL" ; POLLER="NULL" ;;
-            esac
 
             PERSISTENTDIDSALT=`openssl rand -base64 32`
             COMPUTEDIDSALT=`openssl rand -base64 32`
@@ -251,8 +219,6 @@
             echo "CITY                      = ${CITY}" | tee -a ${F_DEBUG}
             echo "UF                        = ${UF}" | tee -a ${F_DEBUG}
             echo "UFUPPER                   = ${UFUPPER}" | tee -a ${F_DEBUG}
-            echo "STATE                     = ${STATE}" | tee -a ${F_DEBUG}
-            echo "POLLER                    = ${POLLER}" | tee -a ${F_DEBUG}
             echo "MSG_AUTENTICACAO          = ${MSG_AUTENTICACAO}" | tee -a ${F_DEBUG}
             echo "MSG_URL_RECUPERACAO_SENHA = ${MSG_URL_RECUPERACAO_SENHA}" | tee -a ${F_DEBUG}            
             echo "COMPUTEDIDSALT            = ${COMPUTEDIDSALT}" | tee -a ${F_DEBUG}
@@ -303,7 +269,7 @@ commonName_max = 64
 emailAddress_default = ${CONTACTMAIL}
 organizationalUnitName_default = ${OU}
 localityName_default = ${CITY}
-stateOrProvinceName_default = ${STATE}
+stateOrProvinceName_default = ${UFUPPER}
 countryName_default = BR
 commonName_default = ${HN}.${HN_DOMAIN}
 EOF
@@ -348,7 +314,6 @@ EOF
         wget ${REPOSITORY}/conf/metadata-providers.xml -O ${SHIBDIR}/conf/metadata-providers.xml
         wget ${REPOSITORY}/conf/saml-nameid.xml -O ${SHIBDIR}/conf/saml-nameid.xml
         wget ${REPOSITORY}/conf/admin/admin.properties -O ${SHIBDIR}/conf/admin/admin.properties
-        wget ${REPOSITORY}/conf/attributes/brEduPerson.xml -O ${SHIBDIR}/conf/attributes/brEduPerson.xml
         wget ${REPOSITORY}/conf/attributes/default-rules.xml -O ${SHIBDIR}/conf/attributes/default-rules.xml
         wget ${REPOSITORY}/conf/attributes/schac.xml -O ${SHIBDIR}/conf/attributes/schac.xml
         wget ${REPOSITORY}/conf/attributes/custom/eduPersonTargetedID.properties -O ${SHIBDIR}/conf/attributes/custom/eduPersonTargetedID.properties
@@ -619,7 +584,7 @@ EOF
 
         <entry key="AccessByIPAddress">
             <bean id="AccessByIPAddress" parent="shibboleth.IPRangeAccessControl"
-                    p:allowedRanges="#{ {'127.0.0.1/32', '::1/128', '${IP}/32', '${POLLER}/32'} }" />
+                    p:allowedRanges="#{ {'127.0.0.1/32', '::1/128', '${IP}/32' }" />
         </entry>
 
     </util:map>
@@ -824,7 +789,7 @@ processors:
 EOF
 
         systemctl restart filebeat
-        systemctl enable filebeat
+        systemctl disable filebeat
 
         cat > /etc/logrotate.d/fticks <<-EOF
 /var/log/fticks.log {
@@ -898,7 +863,7 @@ pid_file=/run/nagios/nrpe.pid
 server_port=5666
 nrpe_user=nagios
 nrpe_group=nagios
-allowed_hosts=127.0.0.1,::1,${IP},${POLLER}
+allowed_hosts=127.0.0.1,::1,${IP}
 dont_blame_nrpe=0
 allow_bash_command_substitution=0
 command_timeout=60
