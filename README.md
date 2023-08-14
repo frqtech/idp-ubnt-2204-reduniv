@@ -1,4 +1,4 @@
-# Roteiro de Criação da Máquina Virtual - Ubnt 22.04 + Shib 4.3.1
+# Roteiro de Criação da Máquina Virtual - Ubnt 22.04 + Shib 4.3.1 - REDUNIV
 
 _Elaborado por Rui Ribeiro - rui.ribeiro@cafe.rnp.br_
 
@@ -104,7 +104,7 @@ iptables -A INPUT -p tcp -m tcp --dport 443 -j ACCEPT
 O arquivo acima descrito pode ser baixado através do seguinte comando:
 
 ```
-wget https://raw.githubusercontent.com/frqtech/idp-ubnt-2204/main/firewall/firewall.rules -O /etc/default/firewall
+wget https://raw.githubusercontent.com/frqtech/idp-ubnt-2204-reduniv/main/firewall/firewall.rules -O /etc/default/firewall
 ```
 
 3.7. O bloco abaixo apresenta o conteúdo do arquivo `/etc/systemd/system/firewall.service`:
@@ -126,7 +126,7 @@ WantedBy=multi-user.target
 O arquivo acima descrito pode ser baixado através do seguinte comando:
 
 ```
-wget https://raw.githubusercontent.com/frqtech/idp-ubnt-2204/main/firewall/firewall.service -O /etc/systemd/system/firewall.service
+wget https://raw.githubusercontent.com/frqtech/idp-ubnt-2204-reduniv/main/firewall/firewall.service -O /etc/systemd/system/firewall.service
 ```
 
 3.8. O bloco abaixo apresenta o conteúdo do arquivo `/opt/rnp/firewall/firewall.sh`:
@@ -201,7 +201,7 @@ O arquivo acima descrito pode ser baixado através do seguinte comando:
 
 ```
 mkdir -p /opt/rnp/firewall/
-wget https://raw.githubusercontent.com/frqtech/idp-ubnt-2204/main/firewall/firewall.sh -O /opt/rnp/firewall/firewall.sh
+wget https://raw.githubusercontent.com/frqtech/idp-ubnt-2204-reduniv/main/firewall/firewall.sh -O /opt/rnp/firewall/firewall.sh
 ```
 
 3.9. Uma vez que os dois arquivos estejam nos locais apropriados, é necessário executar as seguintes linhas de comando:
@@ -259,7 +259,7 @@ restrict ::1
 O arquivo acima descrito pode ser baixado através do seguinte comando:
 
 ```
-wget https://raw.githubusercontent.com/frqtech/idp-ubnt-2204/main/ntp/ntp.conf -O /etc/ntp.conf
+wget https://raw.githubusercontent.com/frqtech/idp-ubnt-2204-reduniv/main/ntp/ntp.conf -O /etc/ntp.conf
 ```
 
 3.12. Crie o usuário cafe que será utilizado posteriormente durante a execução do script de `firstboot.sh`.
@@ -304,7 +304,7 @@ apt install -y jetty9 ; systemctl enable jetty9
 cd /root/
 wget https://shibboleth.net/downloads/identity-provider/4.3.1/shibboleth-identity-provider-4.3.1.zip
 unzip shibboleth-identity-provider-4.3.1.zip
-wget https://raw.githubusercontent.com/frqtech/idp-ubnt-2204/main/firstboot.sh -O /usr/local/sbin/firstboot.sh
+wget https://raw.githubusercontent.com/frqtech/idp-ubnt-2204-reduniv/main/firstboot.sh -O /usr/local/sbin/firstboot.sh
 chmod +x /usr/local/sbin/firstboot.sh
 echo "/usr/local/sbin/firstboot.sh" >> /root/.bash_profile
 ```
