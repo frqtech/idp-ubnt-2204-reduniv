@@ -75,15 +75,8 @@
     </AttributeDefinition>
 
     <!-- RedUniv - eduPersonAffiliation -->
-    <AttributeDefinition id="eduPersonAffiliation" xsi:type="Mapped">
-        <InputAttributeDefinition ref="eduPersonAffiliation" />
-        <DefaultValue passThru="true" />
-        <ValueMap>
-            <ReturnValue>affiliate</ReturnValue>
-            <SourceValue>other</SourceValue>
-            <SourceValue>position</SourceValue>
-            <SourceValue>scholarshipAwardee</SourceValue>
-        </ValueMap>
+    <AttributeDefinition id="eduPersonAffiliation" xsi:type="Simple">
+        <InputDataConnector ref="dcLDAP" attributeNames="eduPersonAffiliation" />
     </AttributeDefinition>
 
     <!-- ========================================== -->
@@ -96,7 +89,7 @@
                 %{idp.attribute.resolver.LDAP.searchFilter}
             ]]>
         </FilterTemplate>
-        <ReturnAttributes>%{idp.authn.LDAP.returnAttributes} mail cn givenName sn brPersonCPF schacDateOfBirth</ReturnAttributes>
+        <ReturnAttributes>%{idp.authn.LDAP.returnAttributes} mail cn givenName sn schacDateOfBirth eduPersonAffiliation</ReturnAttributes>
     </DataConnector>
 
     <DataConnector id="ComputedIDConnector" xsi:type="ComputedId" generatedAttributeID="ComputedID" salt="%{idp.cafe.computedIDsalt}">
